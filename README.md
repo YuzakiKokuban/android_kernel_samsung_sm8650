@@ -20,7 +20,7 @@
 
 * **KernelSU 集成**: 内置多种 KernelSU 版本（包括官方版、MKSU、SukiSU-Ultra），开箱即用。
 
-* **版本信息**: `-android14-Kokuban-Elysia-BYG2`
+* **版本信息**: `-android14-Kokuban-Elysia-BYH2`
 
 ## 🧩 可用版本详解
 
@@ -117,7 +117,7 @@ This is a high-performance custom kernel for the **Samsung Galaxy S24 Snapdragon
 
 * **KernelSU Integrated**: Comes with multiple KernelSU variants (Official, MKSU, SukiSU-Ultra) built-in for an out-of-the-box experience.
 
-* **Version Info**: `-android14-Kokuban-Elysia-BYG2`
+* **Version Info**: `-android14-Kokuban-Elysia-BYH2`
 
 ## 🧩 Available Variants Explained
 
