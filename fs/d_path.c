@@ -103,18 +103,10 @@ static bool prepend_name(struct prepend_buffer *p, const struct qstr *name)
 static int __prepend_path(const struct dentry *dentry, const struct mount *mnt,
 			  const struct path *root, struct prepend_buffer *p)
 {
-#ifdef CONFIG_KDP_NS
-	while (dentry != root->dentry || ((struct kdp_mount *)mnt)->mnt != root->mnt) {
-#else
 	while (dentry != root->dentry || &mnt->mnt != root->mnt) {
-#endif
 		const struct dentry *parent = READ_ONCE(dentry->d_parent);
 
-#ifdef CONFIG_KDP_NS
-		if (dentry == ((struct kdp_mount *)mnt)->mnt->mnt_root) {
-#else
 		if (dentry == mnt->mnt.mnt_root) {
-#endif
 			struct mount *m = READ_ONCE(mnt->mnt_parent);
 			struct mnt_namespace *mnt_ns;
 
