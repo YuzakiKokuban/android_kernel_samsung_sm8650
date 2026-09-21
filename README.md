@@ -1,150 +1,112 @@
-# How do I submit patches to Android Common Kernels
+# Kokuban 内核 for 三星 Galaxy S24 Snapdragon 系列
 
-1. BEST: Make all of your changes to upstream Linux. If appropriate, backport to the stable releases.
-   These patches will be merged automatically in the corresponding common kernels. If the patch is already
-   in upstream Linux, post a backport of the patch that conforms to the patch requirements below.
-   - Do not send patches upstream that contain only symbol exports. To be considered for upstream Linux,
-additions of `EXPORT_SYMBOL_GPL()` require an in-tree modular driver that uses the symbol -- so include
-the new driver or changes to an existing driver in the same patchset as the export.
-   - When sending patches upstream, the commit message must contain a clear case for why the patch
-is needed and beneficial to the community. Enabling out-of-tree drivers or functionality is not
-not a persuasive case.
+<p align="center">
+<img src="https://raw.githubusercontent.com/YuzakiKokuban/Kokuban_Kernel_CI_Center/main/docs/kokuban_logo.png" alt="Logo" width="150">
+</p>
 
-2. LESS GOOD: Develop your patches out-of-tree (from an upstream Linux point-of-view). Unless these are
-   fixing an Android-specific bug, these are very unlikely to be accepted unless they have been
-   coordinated with kernel-team@android.com. If you want to proceed, post a patch that conforms to the
-   patch requirements below.
+<p align="center">
+<a href="https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650/releases"><img src="https://img.shields.io/github/v/release/YuzakiKokuban/android_kernel_samsung_sm8650?style=for-the-badge&logo=github&color=blue" alt="GitHub release"></a>
+<a href="https://t.me/kokubanchat"><img src="https://img.shields.io/badge/Telegram-交流群-blue.svg?style=for-the-badge&logo=telegram" alt="Telegram"></a>
+</p>
 
-# Common Kernel patch requirements
+这是一个面向 **三星 Galaxy S24 Snapdragon 系列** 的自定义内核项目，重点围绕稳定性、性能调优与日常可用性进行构建。项目当前维护 `LKM` 与 `ReSukiSU` 两种发行模式，以满足不同用户对纯净环境和高级功能的需求。
 
-- All patches must conform to the Linux kernel coding standards and pass `scripts/checkpatch.pl`
-- Patches shall not break gki_defconfig or allmodconfig builds for arm, arm64, x86, x86_64 architectures
-(see  https://source.android.com/setup/build/building-kernels)
-- If the patch is not merged from an upstream branch, the subject must be tagged with the type of patch:
-`UPSTREAM:`, `BACKPORT:`, `FROMGIT:`, `FROMLIST:`, or `ANDROID:`.
-- All patches must have a `Change-Id:` tag (see https://gerrit-review.googlesource.com/Documentation/user-changeid.html)
-- If an Android bug has been assigned, there must be a `Bug:` tag.
-- All patches must have a `Signed-off-by:` tag by the author and the submitter
+## 项目概览
 
-Additional requirements are listed below based on patch type
+* **性能优化**：提供面向日常使用与游戏场景的调度与性能调优。
+* **精简发行模式**：围绕 `LKM` 与 `ReSukiSU` 两种模式持续维护，减少历史分支带来的维护复杂度。
+* **扩展特性支持**：可按 workflow 构建配置集成 `Hybrid Mount`、`SuSFS` 与 `BBG`；自动构建默认集成适用于所有内核的 `Hybrid Mount`，`SuSFS` 仅在 `ReSukiSU` 构建中启用。
+* **版本标识**：`-android14-Kokuban-Elysia-DZE1`
 
-## Requirements for backports from mainline Linux: `UPSTREAM:`, `BACKPORT:`
+## 发行版本说明
 
-- If the patch is a cherry-pick from Linux mainline with no changes at all
-    - tag the patch subject with `UPSTREAM:`.
-    - add upstream commit information with a `(cherry picked from commit ...)` line
-    - Example:
-        - if the upstream commit message is
-```
-        important patch from upstream
+* **LKM (Loadable Kernel Module)**
+  * 不内置 Root 方案，适合希望保持内核环境尽可能精简的使用方式。
+  * 如需 Root，需要通过 KernelSU Manager App 手动修补并刷入设备的 `init_boot` 镜像。
 
-        This is the detailed description of the important patch
+* **ReSuki (ReSukiSU)**
+  * 集成 ReSukiSU，并支持 `SUSFS` 与 `KPM` 等高级特性。
+  * 适合有模块扩展、隐藏能力或进阶调试需求的用户。
 
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
-```
->- then Joe Smith would upload the patch for the common kernel as
-```
-        UPSTREAM: important patch from upstream
+> 当前项目不再维护旧的内置 `KSU/MKSU` 分支模式。
 
-        This is the detailed description of the important patch
+## 安装指南
 
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
+1. **解锁 Bootloader**：请确保设备已完成 Bootloader 解锁。
+2. **准备 Recovery**：建议使用较新的 `TWRP` 或 `OrangeFox Recovery`。
+3. **刷入内核**：从本项目 [Releases 页面](https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650/releases) 下载对应版本，并在 Recovery 中刷入内核 `zip` 包。
+4. **仅 LKM 版本需要：修补 `init_boot`**
+   使用前请先备份当前设备的 `init_boot.img`，再通过 KernelSU Manager App 选择并修补该镜像，随后使用 Fastboot 或 Recovery 将修补后的镜像刷入 `init_boot` 分区。
+5. **重启设备**：完成刷入后重启系统并确认功能状态。
 
-        Bug: 135791357
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        (cherry picked from commit c31e73121f4c1ec41143423ac6ce3ce6dafdcec1)
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
-```
+## 下载
 
-- If the patch requires any changes from the upstream version, tag the patch with `BACKPORT:`
-instead of `UPSTREAM:`.
-    - use the same tags as `UPSTREAM:`
-    - add comments about the changes under the `(cherry picked from commit ...)` line
-    - Example:
-```
-        BACKPORT: important patch from upstream
+所有最新构建版本均发布于 [**Releases 页面**](https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650/releases)。
 
-        This is the detailed description of the important patch
+## 反馈与支持
 
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
+如需获取使用交流、问题反馈或发布通知，可加入 [Telegram 交流群](https://t.me/kokubanchat)。
 
-        Bug: 135791357
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        (cherry picked from commit c31e73121f4c1ec41143423ac6ce3ce6dafdcec1)
-        [joe: Resolved minor conflict in drivers/foo/bar.c ]
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
-```
+## 免责声明
 
-## Requirements for other backports: `FROMGIT:`, `FROMLIST:`,
-
-- If the patch has been merged into an upstream maintainer tree, but has not yet
-been merged into Linux mainline
-    - tag the patch subject with `FROMGIT:`
-    - add info on where the patch came from as `(cherry picked from commit <sha1> <repo> <branch>)`. This
-must be a stable maintainer branch (not rebased, so don't use `linux-next` for example).
-    - if changes were required, use `BACKPORT: FROMGIT:`
-    - Example:
-        - if the commit message in the maintainer tree is
-```
-        important patch from upstream
-
-        This is the detailed description of the important patch
-
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
-```
->- then Joe Smith would upload the patch for the common kernel as
-```
-        FROMGIT: important patch from upstream
-
-        This is the detailed description of the important patch
-
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
-
-        Bug: 135791357
-        (cherry picked from commit 878a2fd9de10b03d11d2f622250285c7e63deace
-         https://git.kernel.org/pub/scm/linux/kernel/git/foo/bar.git test-branch)
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
-```
+刷机有风险，操作需谨慎。在进行任何操作前，请务必完整备份您的个人数据。因刷入此内核而导致的任何设备损坏或数据丢失，本人概不负责。
 
 
-- If the patch has been submitted to LKML, but not accepted into any maintainer tree
-    - tag the patch subject with `FROMLIST:`
-    - add a `Link:` tag with a link to the submittal on lore.kernel.org
-    - add a `Bug:` tag with the Android bug (required for patches not accepted into
-a maintainer tree)
-    - if changes were required, use `BACKPORT: FROMLIST:`
-    - Example:
-```
-        FROMLIST: important patch from upstream
 
-        This is the detailed description of the important patch
+# Kokuban Kernel for Samsung Galaxy S24 Snapdragon Series
 
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
+<p align="center">
+<img src="https://raw.githubusercontent.com/YuzakiKokuban/Kokuban_Kernel_CI_Center/main/docs/kokuban_logo.png" alt="Logo" width="150">
+</p>
 
-        Bug: 135791357
-        Link: https://lore.kernel.org/lkml/20190619171517.GA17557@someone.com/
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
-```
+<p align="center">
+<a href="https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650/releases"><img src="https://img.shields.io/github/v/release/YuzakiKokuban/android_kernel_samsung_sm8650?style=for-the-badge&logo=github&color=blue" alt="GitHub release"></a>
+<a href="https://t.me/kokubanchat"><img src="https://img.shields.io/badge/Telegram-Chat-blue.svg?style=for-the-badge&logo=telegram" alt="Telegram"></a>
+</p>
 
-## Requirements for Android-specific patches: `ANDROID:`
+This is a custom kernel project for the **Samsung Galaxy S24 Snapdragon Series**, built with a focus on stability, performance tuning, and day-to-day usability. The project currently maintains two release tracks, `LKM` and `ReSukiSU`, to serve both clean setups and advanced power-user workflows.
 
-- If the patch is fixing a bug to Android-specific code
-    - tag the patch subject with `ANDROID:`
-    - add a `Fixes:` tag that cites the patch with the bug
-    - Example:
-```
-        ANDROID: fix android-specific bug in foobar.c
+## Overview
 
-        This is the detailed description of the important fix
+* **Performance Tuned**: Includes targeted scheduling and performance optimizations for smoother daily use and gaming.
+* **Streamlined Release Model**: Focuses on the actively maintained `LKM` and `ReSukiSU` variants to keep maintenance predictable and transparent.
+* **Optional Feature Integration**: Automated builds integrate `Hybrid Mount` by default and expose a workflow option to disable it. Matching builds may also include `SuSFS` and `BBG`, with `SuSFS` enabled only on `ReSukiSU` releases.
+* **Version Identifier**: `-android14-Kokuban-Elysia-DZE1`
 
-        Fixes: 1234abcd2468 ("foobar: add cool feature")
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
-```
+## Release Variants
 
-- If the patch is a new feature
-    - tag the patch subject with `ANDROID:`
-    - add a `Bug:` tag with the Android bug (required for android-specific features)
+* **LKM (Loadable Kernel Module)**
+  * Does not include a built-in root solution and is intended for users who prefer a cleaner kernel environment.
+  * If root access is required, patch and flash the device `init_boot` image manually through the KernelSU Manager App.
 
+* **ReSuki (ReSukiSU)**
+  * Ships with ReSukiSU integration and supports advanced capabilities such as `SUSFS` and `KPM`.
+  * Recommended for users who need module extensibility, root hiding, or other advanced workflows.
+
+> This project no longer maintains the legacy built-in `KSU/MKSU` branch model.
+
+## Installation
+
+1. **Unlock the Bootloader**: Make sure the device bootloader is already unlocked.
+2. **Prepare a Recovery Environment**: A recent version of `TWRP` or `OrangeFox Recovery` is recommended.
+3. **Flash the Kernel**: Download the appropriate package from the [Releases page](https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650/releases) and flash the kernel `zip` through Recovery.
+4. **LKM Builds Only: Patch `init_boot`**
+   Back up your current `init_boot.img`, patch it with the KernelSU Manager App, and flash the patched image back to the `init_boot` partition using Fastboot or Recovery.
+5. **Reboot the Device**: Restart the system and verify the kernel is running as expected.
+
+## Downloads
+
+All current builds are published on the [**Releases Page**](https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650/releases).
+
+## Support
+
+For release notifications, discussion, or general support, join the [Telegram group](https://t.me/kokubanchat).
+
+## Disclaimer
+
+Flashing custom software carries inherent risks. Please make a full backup of your personal data before proceeding. I am not responsible for any damage to your device or data loss that may occur as a result of flashing this kernel.
+
+
+<p align="center">
+<a href="https://www.paypal.me/LangQin280">☕ Support Me</a>
+</p>
