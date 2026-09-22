@@ -190,3 +190,8 @@ build.sh
 /KernelSU/
 # Caching
 /.ccache/
+
+# Kokuban CI metadata (ported patches, device notes) must stay tracked even though
+# it is kernel build input, not output. Without this, the `*.patch` rule above
+# silently ignores new files under Kokuban/.
+!Kokuban/**/*.patch
