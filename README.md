@@ -9,13 +9,13 @@
 <a href="https://t.me/kokubanchat"><img src="https://img.shields.io/badge/Telegram-交流群-blue.svg?style=for-the-badge&logo=telegram" alt="Telegram"></a>
 </p>
 
-这是一个面向 **三星 Galaxy S24 Snapdragon 系列** 的自定义内核项目，重点围绕稳定性、性能调优与日常可用性进行构建。项目当前维护 `LKM` 与 `ReSukiSU` 两种发行模式，以满足不同用户对纯净环境和高级功能的需求。
+这是一个面向 **三星 Galaxy S24 Snapdragon 系列** 的自定义内核项目，重点围绕稳定性、性能调优与日常可用性进行构建。项目当前维护 `LKM` 与 `BakaSU` 两种发行模式，以满足不同用户对纯净环境和高级功能的需求。
 
 ## 项目概览
 
 * **性能优化**：提供面向日常使用与游戏场景的调度与性能调优。
-* **精简发行模式**：围绕 `LKM` 与 `ReSukiSU` 两种模式持续维护，减少历史分支带来的维护复杂度。
-* **扩展特性支持**：可按 workflow 构建配置集成 `Hybrid Mount`、`SuSFS` 与 `BBG`；自动构建默认集成适用于所有内核的 `Hybrid Mount`，`SuSFS` 仅在 `ReSukiSU` 构建中启用。
+* **精简发行模式**：围绕 `LKM` 与 `BakaSU` 两种模式持续维护，减少历史分支带来的维护复杂度。
+* **扩展特性支持**：可按 workflow 构建配置集成 `Hybrid Mount`、`SuSFS` 与 `BBG`；自动构建默认集成适用于所有内核的 `Hybrid Mount`，`SuSFS` 仅在 `BakaSU` 构建中启用。
 * **版本标识**：`-android14-Kokuban-Elysia-DZE1`
 
 ## 发行版本说明
@@ -24,8 +24,8 @@
   * 不内置 Root 方案，适合希望保持内核环境尽可能精简的使用方式。
   * 如需 Root，需要通过 KernelSU Manager App 手动修补并刷入设备的 `init_boot` 镜像。
 
-* **ReSuki (ReSukiSU)**
-  * 集成 ReSukiSU，并支持 `SUSFS` 与 `KPM` 等高级特性。
+* **BakaSU**
+  * 集成 BakaSU，并支持 `SUSFS` 与 `KPM` 等高级特性。
   * 适合有模块扩展、隐藏能力或进阶调试需求的用户。
 
 > 当前项目不再维护旧的内置 `KSU/MKSU` 分支模式。
@@ -64,13 +64,13 @@
 <a href="https://t.me/kokubanchat"><img src="https://img.shields.io/badge/Telegram-Chat-blue.svg?style=for-the-badge&logo=telegram" alt="Telegram"></a>
 </p>
 
-This is a custom kernel project for the **Samsung Galaxy S24 Snapdragon Series**, built with a focus on stability, performance tuning, and day-to-day usability. The project currently maintains two release tracks, `LKM` and `ReSukiSU`, to serve both clean setups and advanced power-user workflows.
+This is a custom kernel project for the **Samsung Galaxy S24 Snapdragon Series**, built with a focus on stability, performance tuning, and day-to-day usability. The project currently maintains two release tracks, `LKM` and `BakaSU`, to serve both clean setups and advanced power-user workflows.
 
 ## Overview
 
 * **Performance Tuned**: Includes targeted scheduling and performance optimizations for smoother daily use and gaming.
-* **Streamlined Release Model**: Focuses on the actively maintained `LKM` and `ReSukiSU` variants to keep maintenance predictable and transparent.
-* **Optional Feature Integration**: Automated builds integrate `Hybrid Mount` by default and expose a workflow option to disable it. Matching builds may also include `SuSFS` and `BBG`, with `SuSFS` enabled only on `ReSukiSU` releases.
+* **Streamlined Release Model**: Focuses on the actively maintained `LKM` and `BakaSU` variants to keep maintenance predictable and transparent.
+* **Optional Feature Integration**: Automated builds integrate `Hybrid Mount` by default and expose a workflow option to disable it. Matching builds may also include `SuSFS` and `BBG`, with `SuSFS` enabled only on `BakaSU` releases.
 * **Version Identifier**: `-android14-Kokuban-Elysia-DZE1`
 
 ## Release Variants
@@ -79,8 +79,8 @@ This is a custom kernel project for the **Samsung Galaxy S24 Snapdragon Series**
   * Does not include a built-in root solution and is intended for users who prefer a cleaner kernel environment.
   * If root access is required, patch and flash the device `init_boot` image manually through the KernelSU Manager App.
 
-* **ReSuki (ReSukiSU)**
-  * Ships with ReSukiSU integration and supports advanced capabilities such as `SUSFS` and `KPM`.
+* **BakaSU**
+  * Ships with BakaSU integration and supports advanced capabilities such as `SUSFS` and `KPM`.
   * Recommended for users who need module extensibility, root hiding, or other advanced workflows.
 
 > This project no longer maintains the legacy built-in `KSU/MKSU` branch model.
