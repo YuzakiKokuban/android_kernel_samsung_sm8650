@@ -1900,7 +1900,7 @@ out_unmark:
 	return retval;
 }
 
-static int do_execveat_common(int fd, struct filename *filename,
+static int __do_execveat_common(int fd, struct filename *filename,
 			      struct user_arg_ptr argv,
 			      struct user_arg_ptr envp,
 			      int flags)
@@ -1983,6 +1983,34 @@ out_free:
 out_ret:
 	putname(filename);
 	return retval;
+}
+
+#ifdef CONFIG_KSU_MANUAL_HOOK
+extern int ksu_handle_execveat(int *fd, struct filename **filename,
+			     void *argv, void *envp, int *flags);
+extern int ksu_handle_post_execveat(int *fd, struct filename **filename,
+				  void *argv, void *envp, int *flags, int *retval);
+#endif
+
+static int do_execveat_common(int fd, struct filename *filename,
+                              struct user_arg_ptr argv,
+                              struct user_arg_ptr envp, int flags)
+{
+#ifdef CONFIG_KSU_MANUAL_HOOK
+	int retval;
+
+	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
+	/* The exec path consumes filename; keep it alive for the post hook. */
+	if (!IS_ERR(filename))
+		filename->refcnt++;
+	retval = __do_execveat_common(fd, filename, argv, envp, flags);
+	ksu_handle_post_execveat(&fd, &filename, &argv, &envp, &flags, &retval);
+	if (!IS_ERR(filename))
+		putname(filename);
+	return retval;
+#else
+	return __do_execveat_common(fd, filename, argv, envp, flags);
+#endif
 }
 
 int kernel_execve(const char *kernel_filename,
