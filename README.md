@@ -15,7 +15,7 @@
 
 * **性能优化**：提供面向日常使用与游戏场景的调度与性能调优。
 * **精简发行模式**：围绕 `LKM` 与 `BakaSU` 两种模式持续维护，减少历史分支带来的维护复杂度。
-* **扩展特性支持**：可按 workflow 构建配置集成 `Hybrid Mount`、`SuSFS` 与 `BBG`；自动构建默认集成适用于所有内核的 `Hybrid Mount`，`SuSFS` 仅在 `BakaSU` 构建中启用。
+* **扩展特性支持**：可按 workflow 构建配置集成 `Hybrid Mount` 与 `BBG`；自动构建默认集成适用于所有内核的 `Hybrid Mount`。
 * **版本标识**：`-android14-Kokuban-Elysia-DZE1`
 
 ## 发行版本说明
@@ -25,7 +25,7 @@
   * 如需 Root，需要通过 KernelSU Manager App 手动修补并刷入设备的 `init_boot` 镜像。
 
 * **BakaSU**
-  * 集成 BakaSU，并支持 `SUSFS` 与 `KPM` 等高级特性。
+  * 集成 BakaSU，使用完整的手动 hooks 并在构建前校验。
   * 适合有模块扩展、隐藏能力或进阶调试需求的用户。
 
 > 当前项目不再维护旧的内置 `KSU/MKSU` 分支模式。
@@ -70,7 +70,7 @@ This is a custom kernel project for the **Samsung Galaxy S24 Snapdragon Series**
 
 * **Performance Tuned**: Includes targeted scheduling and performance optimizations for smoother daily use and gaming.
 * **Streamlined Release Model**: Focuses on the actively maintained `LKM` and `BakaSU` variants to keep maintenance predictable and transparent.
-* **Optional Feature Integration**: Automated builds integrate `Hybrid Mount` by default and expose a workflow option to disable it. Matching builds may also include `SuSFS` and `BBG`, with `SuSFS` enabled only on `BakaSU` releases.
+* **Optional Feature Integration**: Automated builds integrate `Hybrid Mount` by default and expose a workflow option to disable it. Matching builds may also include `BBG`.
 * **Version Identifier**: `-android14-Kokuban-Elysia-DZE1`
 
 ## Release Variants
@@ -80,7 +80,7 @@ This is a custom kernel project for the **Samsung Galaxy S24 Snapdragon Series**
   * If root access is required, patch and flash the device `init_boot` image manually through the KernelSU Manager App.
 
 * **BakaSU**
-  * Ships with BakaSU integration and supports advanced capabilities such as `SUSFS` and `KPM`.
+  * Integrates BakaSU with complete manual hooks verified before compilation.
   * Recommended for users who need module extensibility, root hiding, or other advanced workflows.
 
 > This project no longer maintains the legacy built-in `KSU/MKSU` branch model.
